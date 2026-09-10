@@ -1,0 +1,1305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ProjectSetu — Collaborative Societal Innovation Ecosystem</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0d1424; --ink2:#47536b; --muted:#7b869e;
+    --line:#e4e8f0; --bg:#f5f7fc; --card:#ffffff;
+    --primary:#4338ca; --primary-d:#2f27a0; --primary-l:#eef0ff;
+    --accent:#f59e0b; --green:#0e9f6e; --red:#e02424; --blue:#1a56db;
+    --r:14px;
+    --sh:0 1px 2px rgba(16,24,40,.05), 0 10px 28px -14px rgba(16,24,40,.22);
+    --sh-lg:0 24px 60px -20px rgba(16,24,40,.35);
+  }
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans","Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.5; font-size:15px;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  h1,h2,h3,h4{letter-spacing:-.02em;line-height:1.25}
+  button{font-family:inherit;cursor:pointer}
+  input,select,textarea{font-family:inherit;font-size:14px}
+
+  /* ---------- NAV ---------- */
+  header.nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+  .nav-inner{display:flex;align-items:center;gap:14px;height:64px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.03em;flex-shrink:0}
+  .logo{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#4f46e5,#7c3aed 60%,#ec4899);
+        display:grid;place-items:center;color:#fff;font-size:15px;font-weight:800;box-shadow:0 6px 16px -6px rgba(79,70,229,.8)}
+  .brand small{display:block;font-size:10.5px;font-weight:600;color:var(--muted);letter-spacing:.02em;margin-top:-2px}
+  .tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:8px 13px;border-radius:999px;font-size:13.5px;font-weight:600;color:var(--ink2);
+       white-space:nowrap;border:0;background:none;transition:.15s}
+  .tab:hover{background:#eef1f8;color:var(--ink)}
+  .tab.active{background:var(--ink);color:#fff}
+  .sih-chip{font-size:11px;font-weight:700;padding:5px 10px;border-radius:999px;background:var(--primary-l);
+            color:var(--primary);border:1px solid #dcdcfb;white-space:nowrap}
+
+  /* ---------- GENERIC ---------- */
+  .view{display:none;padding:28px 0 72px}
+  .view.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+  .btn{border:0;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:700;transition:.15s;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+  .btn.primary{background:var(--primary);color:#fff;box-shadow:0 8px 20px -10px rgba(67,56,202,.9)}
+  .btn.primary:hover{background:var(--primary-d);transform:translateY(-1px)}
+  .btn.dark{background:var(--ink);color:#fff}
+  .btn.dark:hover{background:#1d2740}
+  .btn.ghost{background:#fff;border:1px solid var(--line);color:var(--ink)}
+  .btn.ghost:hover{border-color:#c9d0e0;background:#fafbff}
+  .btn.sm{padding:8px 13px;font-size:13px}
+  .btn.full{width:100%}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+  .pill{font-size:11px;font-weight:700;padding:4px 9px;border-radius:999px;white-space:nowrap;letter-spacing:.01em}
+  .pill.edu{background:#eef0ff;color:#4338ca}
+  .pill.water{background:#e6f6fd;color:#0369a1}
+  .pill.agri{background:#e9f8ef;color:#047857}
+  .sec-title{font-size:22px;font-weight:800;margin-bottom:4px}
+  .sec-sub{color:var(--ink2);font-size:14px;margin-bottom:20px}
+  .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .grid{display:grid;gap:16px}
+  .muted{color:var(--muted)}
+  .divider{height:1px;background:var(--line);margin:18px 0}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;overflow:hidden;border-radius:22px;padding:46px 40px 40px;
+        background:radial-gradient(1000px 400px at 85% -10%,rgba(124,58,237,.45),transparent 60%),
+                   linear-gradient(135deg,#1b1a4b 0%,#2b2170 45%,#3b2ea8 100%);
+        color:#fff;box-shadow:var(--sh-lg)}
+  .hero::after{content:"";position:absolute;inset:0;
+    background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1px);
+    background-size:22px 22px;opacity:.5;pointer-events:none}
+  .hero .badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;position:relative}
+  .hero .badges span{font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);letter-spacing:.03em}
+  .hero h1{font-size:clamp(30px,5vw,50px);font-weight:900;letter-spacing:-.035em;position:relative}
+  .hero h1 em{font-style:normal;background:linear-gradient(90deg,#fbbf24,#f472b6);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{margin-top:14px;font-size:16px;max-width:640px;color:#d6d8f5;position:relative}
+  .hero .cta{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;position:relative}
+  .hero .btn.primary{background:#fff;color:#2b2170}
+  .hero .btn.primary:hover{background:#f2f2ff}
+  .hero .btn.wire{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff}
+  .hero .btn.wire:hover{background:rgba(255,255,255,.2)}
+  .hero-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:34px;position:relative}
+  .hero-stats div{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
+    border-radius:14px;padding:14px 16px;backdrop-filter:blur(6px)}
+  .hero-stats b{display:block;font-size:24px;font-weight:900;letter-spacing:-.03em}
+  .hero-stats span{font-size:11.5px;color:#c3c6ee;font-weight:600}
+
+  /* ---------- STEPS ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+  .step{padding:22px;border-radius:16px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh);position:relative}
+  .step .num{width:32px;height:32px;border-radius:10px;background:var(--primary-l);color:var(--primary);
+    display:grid;place-items:center;font-weight:900;font-size:14px;margin-bottom:12px}
+  .step h4{font-size:15.5px;margin-bottom:6px}
+  .step p{font-size:13.5px;color:var(--ink2)}
+  .arrow{display:grid;place-items:center;color:#c3c9db;font-size:22px}
+
+  /* ---------- CHALLENGE CARDS ---------- */
+  .chal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+  .chal{padding:18px;display:flex;flex-direction:column;gap:10px;transition:.18s}
+  .chal:hover{transform:translateY(-3px);box-shadow:0 20px 40px -22px rgba(16,24,40,.4);border-color:#d3d8e8}
+  .chal-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+  .urg{font-size:10.5px;font-weight:800;padding:4px 8px;border-radius:6px;letter-spacing:.02em}
+  .urg.hot{background:#fee2e2;color:#b91c1c}
+  .urg.warm{background:#fef3c7;color:#b45309}
+  .urg.cool{background:#e0f2fe;color:#0369a1}
+  .chal h3{font-size:15.5px;line-height:1.35;letter-spacing:-.015em}
+  .chal .desc{font-size:13px;color:var(--ink2);flex:1;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .chal .meta{display:flex;gap:14px;font-size:12px;color:var(--muted);font-weight:600;flex-wrap:wrap}
+  .fund-row{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--ink2);margin-bottom:6px}
+  .bar{height:6px;border-radius:99px;background:#eef1f8;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#6366f1,#8b5cf6)}
+  .bar.green i{background:linear-gradient(90deg,#10b981,#34d399)}
+
+  /* ---------- FILTERS ---------- */
+  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center}
+  .filters input,.filters select{padding:10px 13px;border-radius:10px;border:1px solid var(--line);
+    background:#fff;outline:none;font-weight:500}
+  .filters input:focus,.filters select:focus{border-color:var(--primary);box-shadow:0 0 0 3px #eef0ff}
+  .filters input{flex:1;min-width:180px}
+
+  /* ---------- FORM ---------- */
+  .form-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:20px;align-items:start}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--ink2);letter-spacing:.01em}
+  .field input[type=text],.field textarea,.field select{width:100%;padding:12px 14px;border-radius:11px;
+    border:1px solid var(--line);background:#fff;outline:none;transition:.15s;resize:vertical}
+  .field textarea{min-height:130px;line-height:1.55}
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);box-shadow:0 0 0 3px #eef0ff}
+  .lang-row{display:flex;gap:6px;flex-wrap:wrap}
+  .lang{padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:12.5px;font-weight:700;color:var(--ink2)}
+  .lang.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .mic-zone{display:flex;align-items:center;gap:14px;padding:14px;border-radius:12px;
+    background:#fafbff;border:1px dashed #cfd5e8;margin-bottom:10px}
+  .mic{width:52px;height:52px;border-radius:50%;border:0;background:linear-gradient(135deg,#ef4444,#f97316);
+    color:#fff;font-size:22px;display:grid;place-items:center;box-shadow:0 10px 22px -10px rgba(239,68,68,.9);
+    transition:.2s;flex-shrink:0}
+  .mic:hover{transform:scale(1.06)}
+  .mic.rec{animation:pulse 1.2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}50%{box-shadow:0 0 0 16px rgba(239,68,68,0)}}
+  .mic-info{font-size:12.5px;color:var(--ink2);font-weight:600}
+  .mic-info b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:2px}
+  .upload{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .drop{border:1px dashed #cfd5e8;border-radius:12px;padding:18px;text-align:center;background:#fafbff;
+    font-size:12.5px;color:var(--muted);font-weight:600;transition:.15s;cursor:pointer}
+  .drop:hover{border-color:var(--primary);background:#f6f6ff;color:var(--primary)}
+  .drop b{display:block;font-size:20px;margin-bottom:4px}
+
+  /* ---------- AI PANEL ---------- */
+  .ai-panel{background:linear-gradient(160deg,#151338,#241d5e);border-radius:16px;padding:20px;color:#fff;
+    box-shadow:var(--sh-lg);position:sticky;top:88px}
+  .ai-panel h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#a5a3e8;margin-bottom:16px;
+    display:flex;align-items:center;gap:8px}
+  .dot{width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 10px #34d399}
+  .ai-item{margin-bottom:14px}
+  .ai-item .k{font-size:11.5px;color:#a5a3e8;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
+  .ai-item .v{font-size:15px;font-weight:800}
+  .ai-bar{height:5px;border-radius:99px;background:rgba(255,255,255,.16);overflow:hidden;margin-top:7px}
+  .ai-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#34d399,#22d3ee);transition:width .5s}
+  .ai-tag{display:inline-block;font-size:11px;font-weight:700;padding:4px 9px;border-radius:6px;
+    background:rgba(255,255,255,.13);margin:3px 4px 0 0;border:1px solid rgba(255,255,255,.14)}
+  .ai-empty{font-size:13px;color:#8f8dc9;line-height:1.6}
+  .dup-warn{margin-top:12px;padding:11px 13px;border-radius:10px;background:rgba(251,191,36,.14);
+    border:1px solid rgba(251,191,36,.35);font-size:12.5px;color:#fde68a;font-weight:600;line-height:1.5}
+
+  /* ---------- MODAL ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(10,14,26,.62);backdrop-filter:blur(4px);z-index:200;
+    display:none;align-items:flex-start;justify-content:center;padding:28px 16px;overflow-y:auto}
+  .overlay.open{display:flex;animation:fade .2s}
+  .modal{background:#fff;border-radius:18px;max-width:820px;width:100%;box-shadow:var(--sh-lg);overflow:hidden}
+  .modal-head{padding:24px 26px 20px;background:linear-gradient(135deg,#1b1a4b,#3b2ea8);color:#fff;position:relative}
+  .modal-head h2{font-size:21px;margin:10px 0 8px;letter-spacing:-.025em}
+  .modal-head .close{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:9px;border:0;
+    background:rgba(255,255,255,.14);color:#fff;font-size:17px;display:grid;place-items:center}
+  .modal-head .close:hover{background:rgba(255,255,255,.26)}
+  .modal-body{padding:24px 26px 28px}
+  .mtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:20px;overflow-x:auto}
+  .mtab{padding:10px 15px;border:0;background:none;font-size:13.5px;font-weight:700;color:var(--muted);
+    border-bottom:2px solid transparent;white-space:nowrap}
+  .mtab.active{color:var(--primary);border-bottom-color:var(--primary)}
+  .kv{display:grid;grid-template-columns:130px 1fr;gap:9px 14px;font-size:13.5px;margin-bottom:18px}
+  .kv dt{color:var(--muted);font-weight:700;font-size:12.5px}
+  .kv dd{font-weight:600}
+
+  /* ---------- MILESTONES ---------- */
+  .ms{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+  .ms:last-child{border-bottom:0}
+  .ms .bullet{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;
+    flex-shrink:0;font-weight:800;background:#eef1f8;color:var(--muted)}
+  .ms.done .bullet{background:#dcfce7;color:#15803d}
+  .ms.active .bullet{background:var(--primary);color:#fff}
+  .ms .t{font-size:14px;font-weight:700}
+  .ms .s{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+  /* ---------- TABLES ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+    padding:11px 12px;border-bottom:1px solid var(--line);font-weight:800}
+  td{padding:13px 12px;border-bottom:1px solid var(--line);font-weight:600}
+  tr:last-child td{border-bottom:0}
+  tbody tr:hover{background:#fafbff}
+  .badge{font-size:11px;font-weight:800;padding:4px 9px;border-radius:6px}
+  .badge.ok{background:#dcfce7;color:#15803d}
+  .badge.pend{background:#fef3c7;color:#b45309}
+  .badge.lock{background:#e0e7ff;color:#4338ca}
+
+  /* ---------- DASHBOARD ---------- */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:22px}
+  .kpi{padding:18px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:var(--sh)}
+  .kpi b{display:block;font-size:27px;font-weight:900;letter-spacing:-.035em;margin-bottom:2px}
+  .kpi span{font-size:12px;color:var(--muted);font-weight:700}
+  .kpi .delta{font-size:11.5px;font-weight:800;color:var(--green);margin-top:6px;display:block}
+  .dash-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start}
+  .heat{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+  .tile{border-radius:11px;padding:11px 12px;color:#fff;position:relative;overflow:hidden;transition:.15s;cursor:default}
+  .tile:hover{transform:scale(1.045);z-index:2;box-shadow:0 12px 26px -12px rgba(0,0,0,.5)}
+  .tile b{display:block;font-size:19px;font-weight:900;letter-spacing:-.03em}
+  .tile span{font-size:10.5px;font-weight:700;opacity:.9;line-height:1.25;display:block}
+  .l0{background:#e8ebf5;color:#8b93ab}
+  .l1{background:#c7cbf5;color:#2f27a0}
+  .l2{background:#9a9aee;color:#fff}
+  .l3{background:#6d63e0;color:#fff}
+  .l4{background:#4338ca;color:#fff}
+  .l5{background:#2b2170;color:#fff}
+  .legend{display:flex;gap:14px;font-size:11.5px;color:var(--muted);font-weight:700;margin-top:14px;flex-wrap:wrap}
+  .legend i{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+  .sbar{margin-bottom:13px}
+  .sbar .t{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;margin-bottom:6px}
+  .feed{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:13px}
+  .feed:last-child{border-bottom:0}
+  .feed .ic{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:14px;flex-shrink:0;background:#eef1f8}
+  .feed .tm{font-size:11px;color:var(--muted);font-weight:700;margin-top:2px}
+
+  /* ---------- UNIVERSITY ---------- */
+  .team-head{display:flex;gap:18px;align-items:center;padding:22px;flex-wrap:wrap}
+  .avatar{width:58px;height:58px;border-radius:16px;background:linear-gradient(135deg,#4f46e5,#a855f7);
+    color:#fff;display:grid;place-items:center;font-weight:900;font-size:20px;flex-shrink:0}
+  .credit-ring{width:96px;height:96px;border-radius:50%;display:grid;place-items:center;
+    background:conic-gradient(#4338ca 0deg 234deg,#e8ebf5 234deg 360deg);flex-shrink:0}
+  .credit-ring div{width:76px;height:76px;border-radius:50%;background:#fff;display:grid;place-items:center;
+    flex-direction:column;text-align:center;line-height:1.1}
+  .credit-ring b{font-size:19px;font-weight:900;display:block;letter-spacing:-.03em}
+  .credit-ring span{font-size:9.5px;color:var(--muted);font-weight:800;letter-spacing:.04em}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120%);z-index:400;
+    background:var(--ink);color:#fff;padding:13px 22px;border-radius:12px;font-size:13.5px;font-weight:700;
+    box-shadow:var(--sh-lg);transition:transform .35s cubic-bezier(.2,.9,.3,1.3);max-width:90vw;text-align:center}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  footer{border-top:1px solid var(--line);padding:28px 0 40px;font-size:12.5px;color:var(--muted);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:960px){
+    .form-grid{grid-template-columns:1fr}
+    .ai-panel{position:static}
+    .dash-grid{grid-template-columns:1fr}
+    .steps{grid-template-columns:1fr}
+    .arrow{transform:rotate(90deg);padding:4px 0}
+  }
+  @media(max-width:720px){
+    .hero{padding:32px 22px 28px;border-radius:18px}
+    .hero-stats{grid-template-columns:1fr 1fr}
+    .nav-inner{height:auto;padding:10px 0;flex-wrap:wrap}
+    .tabs{margin-left:0;width:100%;order:3}
+    .sih-chip{display:none}
+    .brand small{display:none}
+    .upload{grid-template-columns:1fr}
+    .kv{grid-template-columns:1fr;gap:2px 0}
+    .kv dd{margin-bottom:10px}
+    .modal-head,.modal-body{padding-left:18px;padding-right:18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <div class="brand">
+      <div class="logo">से</div>
+      <div>ProjectSetu<small>Collaborative Societal Innovation</small></div>
+    </div>
+    <span class="sih-chip">SIH26043 · Smart Education</span>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-view="home">Home</button>
+      <button class="tab" data-view="report">Report</button>
+      <button class="tab" data-view="challenges">Challenges</button>
+      <button class="tab" data-view="university">University Hub</button>
+      <button class="tab" data-view="csr">CSR Board</button>
+      <button class="tab" data-view="dashboard">State Dashboard</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ================= HOME ================= -->
+  <section class="view active" id="view-home">
+    <div class="hero">
+      <div class="badges">
+        <span>SMART INDIA HACKATHON 2026</span>
+        <span>PS ID: SIH26043</span>
+        <span>SOFTWARE</span>
+        <span>TEAM STACKSHIFT · NSUT DELHI</span>
+      </div>
+      <h1>Crowdsourcing <em>societal solutions</em><br/>for Jharkhand's 24 districts.</h1>
+      <p class="lead">A unified digital bridge connecting grassroots rural challenges with university innovators and industry CSR partners — turning dummy student projects into field-tested impact.</p>
+      <div class="cta">
+        <button class="btn primary" data-goto="report">🎙️ Report a Challenge</button>
+        <button class="btn wire" data-goto="challenges">Browse Solutions →</button>
+      </div>
+      <div class="hero-stats">
+        <div><b>148</b><span>Challenges Posted</span></div>
+        <div><b>42</b><span>Universities Active</span></div>
+        <div><b>116</b><span>Student Teams</span></div>
+        <div><b>₹1.8 Cr</b><span>CSR Pledged</span></div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="num">1</div>
+        <h4>Intake &amp; Verification</h4>
+        <p>Villagers, schools and Panchayats report challenges by voice or text in Hindi, Santhali or Mundari — auto geo-tagged and verified at block level.</p>
+      </div>
+      <div class="step">
+        <div class="num">2</div>
+        <h4>Academic Solutions</h4>
+        <p>Engineering and polytechnic teams claim verified problems as NEP 2020 capstone projects, guided by faculty supervisors and industry mentors.</p>
+      </div>
+      <div class="step">
+        <div class="num">3</div>
+        <h4>Funded Field Pilots</h4>
+        <p>Corporates pledge milestone-based CSR seed grants into escrow. Prototypes are built, field-tested and tracked live on the state dashboard.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:36px">
+      <div class="row" style="justify-content:space-between;margin-bottom:16px">
+        <div>
+          <div class="sec-title">Live Challenges</div>
+          <div class="sec-sub" style="margin-bottom:0">Verified problems awaiting student teams &amp; CSR sponsors</div>
+        </div>
+        <button class="btn ghost sm" data-goto="challenges">View all →</button>
+      </div>
+      <div class="chal-grid" id="home-chals"></div>
+    </div>
+
+    <div class="card" style="margin-top:30px;padding:24px">
+      <div class="sec-title" style="font-size:17px">Policy Alignment</div>
+      <div class="sec-sub">Built on existing national &amp; state frameworks</div>
+      <div class="row" style="gap:8px">
+        <span class="pill edu">NEP 2020 Capstone Credits</span>
+        <span class="pill water">Companies Act 2013 · Sec 135 CSR</span>
+        <span class="pill agri">Jal Jeevan Mission</span>
+        <span class="pill edu">Jharkhand Innovation Council</span>
+        <span class="pill water">Bhashini Language API</span>
+        <span class="pill agri">NITI Aayog Aspirational Districts</span>
+        <span class="pill edu">AICTE Activity Points</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= REPORT ================= -->
+  <section class="view" id="view-report">
+    <div class="sec-title">Report a Grassroots Challenge</div>
+    <div class="sec-sub">Speak or type in your own language — no literacy barrier. Your report is geo-tagged and routed automatically.</div>
+
+    <div class="form-grid">
+      <div class="card" style="padding:24px">
+        <div class="field">
+          <label>1 · Choose your language</label>
+          <div class="lang-row" id="lang-row">
+            <button class="lang active" data-lang="hi-IN">हिन्दी</button>
+            <button class="lang" data-lang="sat-IN">संताली</button>
+            <button class="lang" data-lang="mun-IN">मुंडारी</button>
+            <button class="lang" data-lang="en-IN">English</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>2 · Describe the challenge</label>
+          <div class="mic-zone">
+            <button class="mic" id="mic-btn">🎙️</button>
+            <div class="mic-info">
+              <b id="mic-title">Tap to speak</b>
+              <span id="mic-sub">Powered by Bhashini speech-to-text · Hindi &amp; regional dialects</span>
+            </div>
+          </div>
+          <textarea id="desc" placeholder="e.g. Hamare gaon ke primary school mein internet nahi hai, bachche STEM practical nahi kar paate…"></textarea>
+        </div>
+
+        <div class="field">
+          <label>3 · Location (auto geo-tagged)</label>
+          <div class="row" style="gap:8px">
+            <input type="text" id="loc" placeholder="Detecting GPS…" style="flex:1" readonly />
+            <button class="btn ghost sm" id="gps-btn">📍 Detect GPS</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>4 · Evidence upload</label>
+          <div class="upload">
+            <div class="drop" onclick="toast('📷 Camera opened (demo)')"><b>📷</b>Photo / Video</div>
+            <div class="drop" onclick="toast('🎧 Voice note attached (demo)')"><b>🎧</b>Voice Note</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>5 · Reporter</label>
+          <div class="row" style="gap:10px">
+            <input type="text" id="reporter" placeholder="Your name" value="Ramesh Murmu" style="flex:1;padding:12px 14px;border-radius:11px;border:1px solid var(--line);outline:none" />
+            <select id="role" style="padding:12px 14px;border-radius:11px;border:1px solid var(--line);outline:none;background:#fff">
+              <option>Panchayat Mukhiya</option>
+              <option>School Teacher</option>
+              <option>Villager</option>
+              <option>Block Officer</option>
+            </select>
+          </div>
+        </div>
+
+        <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink2);font-weight:600;margin-bottom:20px">
+          <input type="checkbox" id="verify" style="margin-top:3px;width:16px;height:16px;accent-color:#4338ca" checked />
+          <span>I confirm this is a genuine on-ground challenge and consent to Panchayat-level verification.</span>
+        </label>
+
+        <button class="btn primary full" id="submit-btn">Submit Challenge →</button>
+      </div>
+
+      <!-- AI TRIAGE -->
+      <div class="ai-panel">
+        <h4><span class="dot"></span> AI Triage Engine · Live</h4>
+        <div id="ai-out">
+          <div class="ai-empty">Start describing the challenge — the triage engine will classify the sector, rate urgency and check for duplicates in real time.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CHALLENGES ================= -->
+  <section class="view" id="view-challenges">
+    <div class="sec-title">Live Challenges Board</div>
+    <div class="sec-sub" id="chal-count">—</div>
+
+    <div class="filters">
+      <input type="text" id="f-q" placeholder="🔍 Search challenges, districts, keywords…" />
+      <select id="f-sector">
+        <option value="All">All Sectors</option>
+        <option>Smart Education</option>
+        <option>Clean Water &amp; Health</option>
+        <option>Agri-Tech &amp; Livelihood</option>
+      </select>
+      <select id="f-district"><option value="All">All Districts</option></select>
+      <select id="f-sort">
+        <option value="urgency">Sort: Urgency</option>
+        <option value="funded">Sort: Funding</option>
+        <option value="teams">Sort: Teams Bidding</option>
+      </select>
+    </div>
+
+    <div class="chal-grid" id="chal-grid"></div>
+  </section>
+
+  <!-- ================= UNIVERSITY ================= -->
+  <section class="view" id="view-university">
+    <div class="sec-title">University Hub</div>
+    <div class="sec-sub">Claim verified problems as NEP 2020 capstone projects and earn academic credits.</div>
+
+    <div class="card team-head">
+      <div class="avatar">SS</div>
+      <div style="flex:1;min-width:220px">
+        <h3 style="font-size:18px">Team StackShift</h3>
+        <div class="muted" style="font-size:13.5px;font-weight:600">Netaji Subhas University of Technology (NSUT), Delhi</div>
+        <div class="row" style="gap:6px;margin-top:10px">
+          <span class="pill edu">Shreya Antil · Lead</span>
+          <span class="pill edu">Shreya Jha</span>
+          <span class="pill edu">Ananya</span>
+          <span class="pill edu">Nayansi</span>
+          <span class="pill edu">Mehar</span>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div class="credit-ring"><div><b>6.5</b><span>CREDITS</span></div></div>
+        <div class="muted" style="font-size:11px;font-weight:800;margin-top:8px;letter-spacing:.05em">NEP 2020 CAPSTONE</div>
+      </div>
+    </div>
+
+    <div class="dash-grid" style="margin-top:18px">
+      <div class="card" style="padding:22px">
+        <h3 style="font-size:16px;margin-bottom:14px">My Claimed Problems</h3>
+        <div id="my-claims"></div>
+      </div>
+      <div style="display:grid;gap:16px">
+        <div class="card" style="padding:22px">
+          <h3 style="font-size:16px;margin-bottom:14px">Faculty Supervisor</h3>
+          <div class="row" style="gap:12px">
+            <div class="avatar" style="width:44px;height:44px;border-radius:12px;font-size:15px;background:linear-gradient(135deg,#0ea5e9,#22d3ee)">DR</div>
+            <div>
+              <div style="font-weight:800;font-size:14px">Dr. R. K. Sharma</div>
+              <div class="muted" style="font-size:12.5px;font-weight:600">Dept. of Computer Engineering, NSUT</div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div style="font-size:12.5px;color:var(--ink2);font-weight:600">Signed off on <b style="color:var(--ink)">2 of 3</b> milestone reports this semester.</div>
+        </div>
+        <div class="card" style="padding:22px">
+          <h3 style="font-size:16px;margin-bottom:12px">Available to Claim</h3>
+          <div id="claimable"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CSR ================= -->
+  <section class="view" id="view-csr">
+    <div class="sec-title">Industry &amp; CSR Board</div>
+    <div class="sec-sub">Milestone-based escrow funding with 100% audit transparency under Companies Act 2013, Schedule VII.</div>
+
+    <div class="kpis">
+      <div class="kpi"><b>₹1.8 Cr</b><span>TOTAL CSR PLEDGED</span><span class="delta">↑ 22% this quarter</span></div>
+      <div class="kpi"><b>₹64.5 L</b><span>RELEASED ON MILESTONES</span><span class="delta">35.8% utilisation</span></div>
+      <div class="kpi"><b>₹1.15 Cr</b><span>IN ESCROW</span><span class="delta" style="color:#4338ca">Audit-locked</span></div>
+      <div class="kpi"><b>18</b><span>ACTIVE FIELD PILOTS</span><span class="delta">Across 12 districts</span></div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card" style="padding:22px">
+        <h3 style="font-size:16px;margin-bottom:6px">CSR Escrow Ledger</h3>
+        <div class="muted" style="font-size:12.5px;margin-bottom:14px;font-weight:600">Immutable milestone-based releases · auto-audited</div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead><tr><th>Corporate Partner</th><th>Pledged</th><th>Released</th><th>Status</th></tr></thead>
+            <tbody id="csr-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div style="display:grid;gap:16px">
+        <div class="card" style="padding:22px">
+          <h3 style="font-size:16px;margin-bottom:14px">Sponsored Challenges</h3>
+          <div id="sponsored"></div>
+        </div>
+        <div class="card" style="padding:22px">
+          <h3 style="font-size:16px;margin-bottom:12px">Become a Partner</h3>
+          <p class="muted" style="font-size:13px;margin-bottom:14px;font-weight:600">Fund a milestone. Mentor a team. Get an audited impact report.</p>
+          <button class="btn primary full" onclick="toast('✅ CSR partnership enquiry sent to ProjectSetu cell')">Pledge Seed Grant</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section class="view" id="view-dashboard">
+    <div class="sec-title">State Impact Dashboard · Jharkhand</div>
+    <div class="sec-sub">Live problem tracking and resolution KPIs across all 24 districts.</div>
+
+    <div class="kpis">
+      <div class="kpi"><b>148</b><span>CHALLENGES INTAKED</span><span class="delta">↑ 12 this week</span></div>
+      <div class="kpi"><b>126</b><span>AI-VERIFIED</span><span class="delta">85.1% verification rate</span></div>
+      <div class="kpi"><b>83</b><span>CLAIMED BY UNIVERSITIES</span><span class="delta">116 teams active</span></div>
+      <div class="kpi"><b>18</b><span>FIELD PILOTS LIVE</span><span class="delta">↑ 4 this month</span></div>
+      <div class="kpi"><b>7</b><span>SOLUTIONS RESOLVED</span><span class="delta">Deployed at scale</span></div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="card" style="padding:22px">
+        <h3 style="font-size:16px;margin-bottom:4px">24-District Challenge Heat Map</h3>
+        <div class="muted" style="font-size:12.5px;margin-bottom:16px;font-weight:600">Number of open verified challenges per district</div>
+        <div class="heat" id="heat"></div>
+        <div class="legend">
+          <span><i class="l1" style="background:#c7cbf5"></i>1–3</span>
+          <span><i style="background:#9a9aee"></i>4–6</span>
+          <span><i style="background:#6d63e0"></i>7–9</span>
+          <span><i style="background:#4338ca"></i>10–14</span>
+          <span><i style="background:#2b2170"></i>15+</span>
+        </div>
+      </div>
+
+      <div style="display:grid;gap:16px">
+        <div class="card" style="padding:22px">
+          <h3 style="font-size:16px;margin-bottom:16px">Sector Distribution</h3>
+          <div id="sector-bars"></div>
+        </div>
+        <div class="card" style="padding:22px">
+          <h3 style="font-size:16px;margin-bottom:16px">Resolution Funnel</h3>
+          <div id="funnel"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="padding:22px;margin-top:18px">
+      <h3 style="font-size:16px;margin-bottom:10px">Live Activity Feed</h3>
+      <div id="feed"></div>
+    </div>
+  </section>
+
+  <footer>
+    <div><b style="color:var(--ink)">ProjectSetu</b> · Smart India Hackathon 2026 · PS ID SIH26043 · Team StackShift, NSUT Delhi</div>
+    <div>Prototype — mock data for demonstration</div>
+  </footer>
+</main>
+
+<div class="overlay" id="overlay"><div class="modal" id="modal"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const DISTRICTS = [
+  ["Ranchi",18],["Dhanbad",14],["Giridih",11],["East Singhbhum",10],["West Singhbhum",9],
+  ["Bokaro",9],["Hazaribagh",8],["Dumka",8],["Deoghar",7],["Palamu",7],["Garhwa",5],
+  ["Chatra",5],["Gumla",5],["Koderma",4],["Latehar",4],["Lohardaga",3],["Simdega",3],
+  ["Khunti",3],["Ramgarh",3],["Jamtara",3],["Pakur",2],["Sahibganj",2],["Godda",2],
+  ["Seraikela-Kharsawan",3]
+];
+
+const SECTORS = {
+  "Smart Education":         {cls:"edu",   icon:"🎓"},
+  "Clean Water & Health":    {cls:"water", icon:"💧"},
+  "Agri-Tech & Livelihood":  {cls:"agri",  icon:"🌾"}
+};
+
+let CHALLENGES = [
+  { id:138, title:"Solar Powered Drinking Water Filter for Primary School",
+    sector:"Clean Water & Health", district:"Giridih", urgency:92, teams:0, pledged:0, status:"Verified",
+    desc:"During summer months, ground water fluoride levels spike drastically. Children suffer from dental and skeletal fluorosis. Need a low-maintenance solar electro-coagulation filter designed by engineering students.",
+    reporter:"Ramesh Murmu (Panchayat Mukhiya)", posted:"2 days ago" },
+
+  { id:139, title:"Offline STEM Learning Tablet for Santhal Tribal Schools",
+    sector:"Smart Education", district:"Ranchi", urgency:88, teams:2, pledged:45000, status:"Bidding",
+    desc:"Primary schools lack internet connectivity. Developing an offline peer-to-peer curriculum translated into local Santhali & Mundari languages with audio support.",
+    reporter:"Sunita Hembram (Head Teacher)", posted:"5 days ago" },
+
+  { id:140, title:"Low-Cost Heavy Metal & Arsenic Detection Sensor Kit",
+    sector:"Clean Water & Health", district:"Dhanbad", urgency:95, teams:4, pledged:120000, status:"Bidding",
+    desc:"Households around mining belts suspect contamination. Prototype needs portable colorimeter / paper-strip based sensors readable by ASHA workers.",
+    reporter:"Block Health Officer, Jharia", posted:"1 day ago" },
+
+  { id:141, title:"Solar Cold-Storage Network for Lac Farmers",
+    sector:"Agri-Tech & Livelihood", district:"Ranchi", urgency:76, teams:3, pledged:80000, status:"Bidding",
+    desc:"30% post-harvest spoilage due to lack of local cooling infrastructure. Needs a modular 5-tonne solar cold room with shared-usage scheduling app.",
+    reporter:"Lac Growers Cooperative", posted:"6 days ago" },
+
+  { id:142, title:"Dropout Early-Warning & Mentorship Engine",
+    sector:"Smart Education", district:"Hazaribagh", urgency:81, teams:1, pledged:25000, status:"Bidding",
+    desc:"AI system to flag school dropouts in rural secondary schools using attendance, assessment and socio-economic signals.",
+    reporter:"District Education Officer", posted:"4 days ago" },
+
+  { id:143, title:"Low-Cost Sanitary Pad Vending & Incinerator Unit",
+    sector:"Clean Water & Health", district:"Dumka", urgency:70, teams:2, pledged:60000, status:"Bidding",
+    desc:"Girls miss school during menstruation due to lack of facilities. Need a coin-operated vending machine paired with a safe smokeless incinerator.",
+    reporter:"Kasturba Gandhi Balika Vidyalaya", posted:"8 days ago" },
+
+  { id:144, title:"Santhali Language Digital Classroom Content Pack",
+    sector:"Smart Education", district:"West Singhbhum", urgency:74, teams:2, pledged:40000, status:"Piloted",
+    desc:"Class-I to V textbooks have no digital equivalent in Santhali. Content pack must run on low-end Android projectors used in Chaibasa cluster schools.",
+    reporter:"Cluster Resource Centre, Chaibasa", posted:"12 days ago" },
+
+  { id:145, title:"Minor Irrigation Canal Monitoring using Low-Cost IoT",
+    sector:"Agri-Tech & Livelihood", district:"Palamu", urgency:79, teams:1, pledged:30000, status:"Bidding",
+    desc:"Canal water theft and uneven distribution cause crop loss at the tail end. Requires solar-powered level sensors with SMS alerts to the Water Users Association.",
+    reporter:"Water Users Association, Daltonganj", posted:"3 days ago" },
+
+  { id:146, title:"Millet Value-Chain Grading & Packaging Unit",
+    sector:"Agri-Tech & Livelihood", district:"Gumla", urgency:68, teams:2, pledged:55000, status:"Piloted",
+    desc:"Ragi and kodo millet fetch low prices due to poor grading. A semi-automatic grader and vacuum packer would raise farmer realisation by ~22%.",
+    reporter:"Gumla Farmer Producer Company", posted:"15 days ago" },
+
+  { id:147, title:"Mobile Tele-Medicine Kiosk for PHC Sub-Centres",
+    sector:"Clean Water & Health", district:"Deoghar", urgency:84, teams:3, pledged:90000, status:"Bidding",
+    desc:"Sub-centres lack doctors. A solar-powered kiosk with vitals capture and low-bandwidth video consult can connect 40 villages to the district hospital.",
+    reporter:"Dr. A. Prasad, Civil Surgeon", posted:"2 days ago" },
+
+  { id:148, title:"Biometric Attendance & Learning Tracker for Anganwadi",
+    sector:"Smart Education", district:"Bokaro", urgency:66, teams:1, pledged:20000, status:"Verified",
+    desc:"Anganwadi worker attendance and child nutrition data is still paper-based. Needs an offline-first Android app syncing weekly to the block server.",
+    reporter:"CDPO, Chas Block", posted:"9 days ago" },
+
+  { id:149, title:"Arsenic-Safe Community Water ATM Retrofitting",
+    sector:"Clean Water & Health", district:"Sahibganj", urgency:90, teams:2, pledged:75000, status:"Bidding",
+    desc:"Existing Jal Jeevan Mission standposts show arsenic above 50 ppb. Retrofitting with an adsorption cartridge plus IoT cartridge-life indicator.",
+    reporter:"Gram Panchayat, Rajmahal", posted:"1 day ago" },
+
+  { id:150, title:"Forest Produce Traceability & Fair-Price Ledger",
+    sector:"Agri-Tech & Livelihood", district:"Simdega", urgency:72, teams:1, pledged:35000, status:"Verified",
+    desc:"Mahua and tendu collectors are underpaid by middlemen. A blockchain-lite ledger with SMS receipts can ensure MSP compliance.",
+    reporter:"Van Suraksha Samiti", posted:"7 days ago" }
+];
+
+const CSR_PARTNERS = [
+  { name:"Tata Steel", pledged:6000000, released:2100000, status:"Escrow Locked", cls:"lock" },
+  { name:"Coal India Ltd", pledged:4500000, released:1800000, status:"Milestone Released", cls:"ok" },
+  { name:"SAIL", pledged:3500000, released:1200000, status:"Milestone Released", cls:"ok" },
+  { name:"Jindal Steel & Power", pledged:2500000, released:900000, status:"Escrow Locked", cls:"lock" },
+  { name:"Hindalco Industries", pledged:1500000, released:450000, status:"Pending Tranche", cls:"pend" }
+];
+
+const MY_CLAIMS = [
+  { id:139, title:"Offline STEM Learning Tablet for Santhal Tribal Schools",
+    district:"Ranchi", credits:4, progress:45, stage:"Prototype Build" },
+  { id:144, title:"Santhali Language Digital Classroom Content Pack",
+    district:"West Singhbhum", credits:2.5, progress:70, stage:"Field Pilot" }
+];
+
+const BLUEPRINT = [
+  "Raspberry Pi 4 offline local Wi-Fi content cache (Raspberry Pi model).",
+  "Gamified STEM curriculum translated to Santhali using audio voiceovers.",
+  "Solar battery pack sizing to ensure continuous classroom operation."
+];
+
+const MILESTONES = [
+  { t:"Blueprint approved by faculty & industry mentor", s:"₹0 · Completed", state:"done" },
+  { t:"Hardware prototype v1 (10 units)", s:"₹45,000 · Released from escrow", state:"done" },
+  { t:"Field pilot in 5 Santhal schools, Ranchi", s:"₹75,000 · In progress", state:"active" },
+  { t:"Independent impact audit & NEP credit sign-off", s:"₹30,000 · Pending", state:"" }
+];
+
+const FEED = [
+  ["🎙️","New challenge reported in Giridih — Solar Drinking Water Filter","Panchayat Mukhiya · 12 min ago"],
+  ["🤖","AI Triage verified 4 challenges in Dhanbad block","Sector: Clean Water & Health · 38 min ago"],
+  ["🎓","Team StackShift (NSUT) submitted blueprint for Challenge #139","NEP capstone credit claim raised · 2 hrs ago"],
+  ["🏦","Tata Steel released ₹4.5L milestone tranche for Challenge #147","Escrow ledger updated · 5 hrs ago"],
+  ["✅","Challenge #146 marked PILOTED in Gumla district","Millet grading unit live in 3 FPOs · 1 day ago"],
+  ["🌾","3 new university teams claimed Agri-Tech challenges","42 universities active statewide · 1 day ago"]
+];
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+const $  = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const inr = n => "₹" + n.toLocaleString("en-IN");
+
+function toast(msg){
+  const t = $("#toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=>t.classList.remove("show"), 2600);
+}
+
+/* ============================================================
+   NAVIGATION
+   ============================================================ */
+function go(view){
+  $$(".view").forEach(v=>v.classList.remove("active"));
+  $("#view-"+view).classList.add("active");
+  $$(".tab").forEach(t=>t.classList.toggle("active", t.dataset.view===view));
+  window.scrollTo({top:0,behavior:"instant"});
+  if(view==="challenges") renderChallenges();
+  if(view==="university")  renderUniversity();
+  if(view==="csr")         renderCSR();
+  if(view==="dashboard")   renderDashboard();
+}
+$("#tabs").addEventListener("click", e=>{
+  const b = e.target.closest(".tab"); if(b) go(b.dataset.view);
+});
+document.addEventListener("click", e=>{
+  const g = e.target.closest("[data-goto]"); if(g) go(g.dataset.goto);
+});
+
+/* ============================================================
+   HOME — featured challenges
+   ============================================================ */
+function challengeCard(c){
+  const s = SECTORS[c.sector];
+  const urgCls = c.urgency>=85?"hot":c.urgency>=75?"warm":"cool";
+  const pct = Math.min(100, Math.round(c.pledged/150000*100));
+  return `<article class="card chal">
+    <div class="chal-top">
+      <span class="pill ${s.cls}">${s.icon} ${c.sector}</span>
+      <span class="urg ${urgCls}">URGENCY ${c.urgency}</span>
+    </div>
+    <h3>${c.title}</h3>
+    <p class="desc">${c.desc}</p>
+    <div class="meta">
+      <span>📍 ${c.district}, JH</span>
+      <span>👥 ${c.teams} team${c.teams===1?"":"s"} bidding</span>
+    </div>
+    <div>
+      <div class="fund-row"><span>${inr(c.pledged)} pledged</span><span>${c.status}</span></div>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+    </div>
+    <button class="btn ghost full sm" onclick="openChallenge(${c.id})">View &amp; Bid →</button>
+  </article>`;
+}
+function renderHome(){
+  $("#home-chals").innerHTML = CHALLENGES.slice(0,3).map(challengeCard).join("");
+}
+
+/* ============================================================
+   CHALLENGES BOARD
+   ============================================================ */
+function initFilters(){
+  const sel = $("#f-district");
+  DISTRICTS.forEach(([d])=> sel.insertAdjacentHTML("beforeend",`<option>${d}</option>`));
+  ["f-q","f-sector","f-district","f-sort"].forEach(id=>
+    $("#"+id).addEventListener("input", renderChallenges));
+}
+
+function renderChallenges(){
+  const q    = $("#f-q").value.trim().toLowerCase();
+  const sec  = $("#f-sector").value;
+  const dist = $("#f-district").value;
+  const sort = $("#f-sort").value;
+
+  let list = CHALLENGES.filter(c=>{
+    if(sec!=="All" && c.sector!==sec) return false;
+    if(dist!=="All" && c.district!==dist) return false;
+    if(q && !(c.title+c.desc+c.district+c.sector).toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  list.sort((a,b)=> sort==="funded" ? b.pledged-a.pledged
+                 : sort==="teams"  ? b.teams-a.teams
+                 : b.urgency-a.urgency);
+
+  $("#chal-count").textContent =
+    `${list.length} challenge${list.length===1?"":"s"} matching your filters · out of 148 statewide`;
+  $("#chal-grid").innerHTML = list.length
+    ? list.map(challengeCard).join("")
+    : `<div class="card" style="padding:40px;text-align:center;grid-column:1/-1">
+         <div style="font-size:34px;margin-bottom:10px">🔍</div>
+         <h3 style="font-size:16px;margin-bottom:6px">No challenges match those filters</h3>
+         <p class="muted" style="font-size:13.5px">Try widening the district or sector filter.</p>
+       </div>`;
+}
+
+/* ============================================================
+   AI TRIAGE ENGINE
+   ============================================================ */
+const KEYWORDS = {
+  "Smart Education": ["school","student","teacher","learning","dropout","tablet","curriculum","classroom",
+    "literacy","anganwadi","stem","exam","education","padhai","shiksha","स्कूल","शिक्षा","बच्चे","पढ़ाई",
+    "offline","content","mentorship","attendance"],
+  "Clean Water & Health": ["water","jal","filter","arsenic","fluoride","sanitation","toilet","health",
+    "disease","phc","medicine","drinking","hospital","clinic","पानी","स्वास्थ्य","बीमारी","शौचालय",
+    "contamination","fluorosis","sensor","kiosk","tele-medicine"],
+  "Agri-Tech & Livelihood": ["farm","kisan","crop","farmer","irrigation","lac","millet","harvest","storage",
+    "cold","market","खेती","किसान","फसल","irrigation","canal","soil","seed","livelihood","forest","produce",
+    "mahua","tendu","spoilage"]
+};
+const URGENT_WORDS = ["urgent","emergency","children","child","death","disease","contamination","arsenic",
+  "fluorosis","summer","outbreak","critical","severe","immediately","danger"];
+
+let aiTimer = null;
+function runTriage(text){
+  clearTimeout(aiTimer);
+  const out = $("#ai-out");
+  if(text.trim().length < 12){
+    out.innerHTML = `<div class="ai-empty">Start describing the challenge — the triage engine will classify the sector, rate urgency and check for duplicates in real time.</div>`;
+    return;
+  }
+  out.innerHTML = `<div class="ai-empty">⏳ Analysing with Bhashini + sector classifier…</div>`;
+
+  aiTimer = setTimeout(()=>{
+    const low = text.toLowerCase();
+
+    /* --- sector classification --- */
+    const scores = {};
+    let total = 0;
+    for(const [sector, words] of Object.entries(KEYWORDS)){
+      let s = 0;
+      words.forEach(w => { if(low.includes(w)) s += 1; });
+      scores[sector] = s; total += s;
+    }
+    let best = "Smart Education", bestScore = 0;
+    for(const [k,v] of Object.entries(scores)) if(v > bestScore){ bestScore = v; best = k; }
+    const conf = total === 0 ? 61 : Math.min(97, Math.round(55 + (bestScore/total)*45));
+
+    /* --- urgency --- */
+    let urg = 55 + Math.min(30, Math.round(text.length/9));
+    URGENT_WORDS.forEach(w => { if(low.includes(w)) urg += 5; });
+    urg = Math.max(45, Math.min(98, urg));
+
+    /* --- duplicate detection --- */
+    const tokens = low.split(/\W+/).filter(w=>w.length>4);
+    let dup = null, bestSim = 0;
+    CHALLENGES.forEach(c=>{
+      const ct = (c.title+" "+c.desc).toLowerCase().split(/\W+/).filter(w=>w.length>4);
+      const common = tokens.filter(t=>ct.includes(t)).length;
+      const sim = tokens.length ? common / Math.sqrt(tokens.length * ct.length) : 0;
+      if(sim > bestSim){ bestSim = sim; dup = c; }
+    });
+    const isDup = bestSim > 0.30;
+
+    const matched = KEYWORDS[best].filter(w=>low.includes(w)).slice(0,6);
+    const s = SECTORS[best];
+
+    out.innerHTML = `
+      <div class="ai-item">
+        <div class="k">Predicted Sector</div>
+        <div class="v">${s.icon} ${best}</div>
+        <div class="ai-bar"><i style="width:${conf}%"></i></div>
+        <div style="font-size:11.5px;color:#a5a3e8;font-weight:700;margin-top:6px">${conf}% confidence</div>
+      </div>
+      <div class="ai-item">
+        <div class="k">Urgency Score</div>
+        <div class="v" style="color:${urg>=85?'#fca5a5':urg>=75?'#fcd34d':'#7dd3fc'}">${urg} / 100</div>
+        <div class="ai-bar"><i style="width:${urg}%;background:linear-gradient(90deg,#fbbf24,#ef4444)"></i></div>
+      </div>
+      <div class="ai-item">
+        <div class="k">Signal Keywords</div>
+        <div>${matched.length ? matched.map(m=>`<span class="ai-tag">${m}</span>`).join("")
+                              : `<span class="ai-tag">no strong signal</span>`}</div>
+      </div>
+      <div class="ai-item">
+        <div class="k">Routing</div>
+        <div class="v" style="font-size:13.5px">${best==="Smart Education" ? "Dept. of School Education &amp; Literacy, Jharkhand"
+          : best==="Clean Water & Health" ? "Jal Jeevan Mission Cell + NRHM"
+          : "Dept. of Agriculture, Animal Husbandry &amp; Co-operatives"}</div>
+      </div>
+      ${isDup ? `<div class="dup-warn">⚠️ Possible duplicate detected — <b>${Math.round(bestSim*100)}%</b> overlap with
+        Challenge #${dup.id}: "${dup.title}" (${dup.district}). Flagged for block-level dedup review.</div>`
+        : `<div class="dup-warn" style="background:rgba(52,211,153,.14);border-color:rgba(52,211,153,.35);color:#6ee7b7">
+           ✅ No duplicate found across ${CHALLENGES.length} nearby block-level reports.</div>`}
+    `;
+  }, 420);
+}
+
+/* ============================================================
+   REPORT FORM
+   ============================================================ */
+$("#desc").addEventListener("input", e => runTriage(e.target.value));
+
+$("#lang-row").addEventListener("click", e=>{
+  const b = e.target.closest(".lang"); if(!b) return;
+  $$("#lang-row .lang").forEach(x=>x.classList.remove("active"));
+  b.classList.add("active");
+  toast("🌐 Language set to " + b.textContent + " · Bhashini ASR active");
+});
+
+$("#gps-btn").addEventListener("click", ()=>{
+  const f = $("#loc");
+  f.value = "Detecting…";
+  setTimeout(()=>{ f.value = "24.1800° N, 86.3000° E · Giridih, Jharkhand"; }, 700);
+});
+
+/* --- voice input --- */
+const DEMO_TRANSCRIPTS = {
+  "hi-IN":"Hamare gaon ke primary school mein internet nahi hai. Bachche STEM practical nahi kar paate. Summer mein paani mein fluoride zyada aa jata hai, bachchon ko dant aur haddi ki bimari hoti hai. Kripya koi sasta solar filter bana dijiye.",
+  "sat-IN":"Ale school re internet ge yaña. Kora STEM practical seṅ gel jaṅ. Hako dareṅ do re fluoride jadaṅa, hor hon dant ar haddi re bimar hoyaṅ. Sasta solar filter need.",
+  "mun-IN":"School re internet in ya. Hon STEM practical se gel ja. Hako re fluoride jada, hor hon dant bimar. Sasta solar filter lagao.",
+  "en-IN":"Our village primary school has no internet. Children cannot do STEM practicals. In summer the groundwater fluoride spikes and children suffer from dental and skeletal fluorosis. We need a low-cost solar water filter."
+};
+
+let recognition = null, recording = false;
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+$("#mic-btn").addEventListener("click", ()=>{
+  const btn = $("#mic-btn"), title = $("#mic-title"), sub = $("#mic-sub");
+  const lang = document.querySelector("#lang-row .lang.active").dataset.lang;
+
+  if(recording){
+    recording = false;
+    btn.classList.remove("rec"); title.textContent = "Tap to speak";
+    sub.textContent = "Powered by Bhashini speech-to-text";
+    if(recognition) recognition.stop();
+    return;
+  }
+
+  recording = true;
+  btn.classList.add("rec");
+  title.textContent = "Listening…";
+  sub.textContent = "Speak naturally — we'll transcribe in real time";
+
+  if(SR){
+    try{
+      recognition = new SR();
+      recognition.lang = lang;
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      let final = "";
+      recognition.onresult = ev=>{
+        let interim = "";
+        for(let i=ev.resultIndex;i<ev.results.length;i++){
+          const t = ev.results[i][0].transcript;
+          if(ev.results[i].isFinal) final += t + " "; else interim += t;
+        }
+        $("#desc").value = (final + interim).trim();
+        runTriage($("#desc").value);
+      };
+      recognition.onerror = ()=>{ simulateVoice(lang); };
+      recognition.start();
+      setTimeout(()=>{ if(recording) recognition.stop(); }, 9000);
+      return;
+    }catch(e){ /* fall through */ }
+  }
+  simulateVoice(lang);
+});
+
+function simulateVoice(lang){
+  const text = DEMO_TRANSCRIPTS[lang] || DEMO_TRANSCRIPTS["en-IN"];
+  const ta = $("#desc");
+  ta.value = "";
+  let i = 0;
+  const tick = setInterval(()=>{
+    ta.value = text.slice(0, i);
+    i += 3;
+    runTriage(ta.value);
+    if(i > text.length){
+      clearInterval(tick);
+      recording = false;
+      $("#mic-btn").classList.remove("rec");
+      $("#mic-title").textContent = "Tap to speak";
+      $("#mic-sub").textContent = "Transcribed by Bhashini · " + lang;
+      ta.value = text;
+      runTriage(text);
+      toast("🎙️ Voice note transcribed successfully");
+    }
+  }, 22);
+}
+
+/* --- submit --- */
+$("#submit-btn").addEventListener("click", ()=>{
+  const desc = $("#desc").value.trim();
+  if(desc.length < 15) return toast("⚠️ Please describe the challenge first (or use the mic)");
+  if(!$("#verify").checked) return toast("⚠️ Panchayat verification consent is required");
+
+  /* re-run classification synchronously for the new record */
+  const low = desc.toLowerCase();
+  let best = "Smart Education", bestScore = 0;
+  for(const [sector, words] of Object.entries(KEYWORDS)){
+    const s = words.filter(w=>low.includes(w)).length;
+    if(s > bestScore){ bestScore = s; best = sector; }
+  }
+  const newId = Math.max(...CHALLENGES.map(c=>c.id)) + 1;
+  const loc = $("#loc").value || "24.1800° N, 86.3000° E · Giridih, Jharkhand";
+  const district = loc.includes("Giridih") ? "Giridih" : "Ranchi";
+
+  CHALLENGES.unshift({
+    id:newId,
+    title: desc.split(/[.!?]/)[0].slice(0,72) + (desc.split(/[.!?]/)[0].length>72?"…":""),
+    sector: best,
+    district,
+    urgency: Math.min(97, 60 + Math.round(desc.length/10)),
+    teams:0, pledged:0, status:"Pending Verification",
+    desc,
+    reporter: ($("#reporter").value || "Citizen") + " (" + $("#role").value + ")",
+    posted:"Just now"
+  });
+
+  toast("✅ Challenge #"+newId+" submitted · routed to AI verification queue");
+  $("#desc").value = ""; $("#loc").value = "";
+  runTriage("");
+  renderHome();
+  go("challenges");
+});
+
+/* ============================================================
+   CHALLENGE MODAL
+   ============================================================ */
+let modalTab = "blueprint";
+
+function openChallenge(id){
+  const c = CHALLENGES.find(x=>x.id===id); if(!c) return;
+  modalTab = "blueprint";
+  renderModal(c);
+  $("#overlay").classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeModal(){
+  $("#overlay").classList.remove("open");
+  document.body.style.overflow = "";
+}
+$("#overlay").addEventListener("click", e=>{ if(e.target.id==="overlay") closeModal(); });
+document.addEventListener("keydown", e=>{ if(e.key==="Escape") closeModal(); });
+
+function renderModal(c){
+  const s = SECTORS[c.sector];
+  const urgent = c.urgency>=85?"hot":c.urgency>=75?"warm":"cool";
+  const pct = Math.min(100, Math.round(c.pledged/150000*100));
+
+  let body = "";
+  if(modalTab==="blueprint"){
+    body = `
+      <dl class="kv">
+        <dt>Description</dt><dd>${c.desc}</dd>
+        <dt>District</dt><dd>${c.district}, Jharkhand</dd>
+        <dt>Reported by</dt><dd>${c.reporter}</dd>
+        <dt>Posted</dt><dd>${c.posted}</dd>
+        <dt>Status</dt><dd>${c.status}</dd>
+        <dt>Funding</dt><dd>${inr(c.pledged)} pledged of ₹1,50,000 target</dd>
+      </dl>
+      <div class="bar"><i style="width:${pct}%"></i></div>
+
+      <div class="divider"></div>
+      <h4 style="font-size:15px;margin-bottom:10px">Proposed Technical Blueprint</h4>
+      <div style="font-size:13.5px;color:var(--ink2);line-height:1.9;font-weight:600">
+        ${BLUEPRINT.map((b,i)=>`<div>${i+1}. ${b}</div>`).join("")}
+      </div>
+
+      <div class="divider"></div>
+      <h4 style="font-size:15px;margin-bottom:10px">Requested Industry Mentorship &amp; Seed Support</h4>
+      <p style="font-size:13.5px;font-weight:600;color:var(--ink2)">
+        Hardware Prototyping &amp; CSR Pilot Seed Grant — <b style="color:var(--ink)">₹1.5 Lakhs</b>
+      </p>
+      <div style="margin-top:12px">
+        <span class="pill edu">✓ Qualifies for NEP 2020 Academic Capstone Credits</span>
+      </div>
+
+      <div class="divider"></div>
+      <div class="row" style="gap:10px">
+        <button class="btn primary" style="flex:1" onclick="toast('🎓 Capstone claim submitted to faculty supervisor')">Claim as Capstone Project</button>
+        <button class="btn ghost" style="flex:1" onclick="toast('🏦 CSR pledge intent sent to partner desk')">Pledge Seed Grant</button>
+      </div>
+    `;
+  }
+  else if(modalTab==="milestones"){
+    body = `
+      <p class="muted" style="font-size:13px;font-weight:600;margin-bottom:16px">
+        Milestone-based CSR escrow — funds release only after each stage is verified by the faculty supervisor and industry mentor.
+      </p>
+      ${MILESTONES.map((m,i)=>`
+        <div class="ms ${m.state}">
+          <div class="bullet">${m.state==="done"?"✓":i+1}</div>
+          <div>
+            <div class="t">${m.t}</div>
+            <div class="s">${m.s}</div>
+          </div>
+        </div>`).join("")}
+      <div class="divider"></div>
+      <div class="row" style="justify-content:space-between">
+        <div><div class="muted" style="font-size:11.5px;font-weight:800;letter-spacing:.06em">TOTAL ESCROW</div>
+             <div style="font-size:19px;font-weight:900">₹1,50,000</div></div>
+        <div><div class="muted" style="font-size:11.5px;font-weight:800;letter-spacing:.06em">RELEASED</div>
+             <div style="font-size:19px;font-weight:900;color:var(--green)">₹45,000</div></div>
+        <div><div class="muted" style="font-size:11.5px;font-weight:800;letter-spacing:.06em">REMAINING</div>
+             <div style="font-size:19px;font-weight:900;color:var(--primary)">₹1,05,000</div></div>
+      </div>
+    `;
+  }
+  else{
+    body = `
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>Date</th><th>Milestone</th><th>Amount</th><th>Audit</th></tr></thead>
+          <tbody>
+            <tr><td>12 Feb 2026</td><td>Blueprint approved</td><td>₹0</td><td><span class="badge ok">Verified</span></td></tr>
+            <tr><td>28 Feb 2026</td><td>Prototype v1 · 10 units</td><td>₹45,000</td><td><span class="badge ok">Released</span></td></tr>
+            <tr><td>—</td><td>Field pilot · 5 schools</td><td>₹75,000</td><td><span class="badge pend">In Progress</span></td></tr>
+            <tr><td>—</td><td>Impact audit &amp; credit sign-off</td><td>₹30,000</td><td><span class="badge lock">Escrowed</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="divider"></div>
+      <div class="row" style="gap:8px">
+        <span class="pill water">Tata Steel · ₹45,000</span>
+        <span class="pill agri">Coal India · ₹75,000</span>
+        <span class="pill edu">SAIL · ₹30,000</span>
+      </div>
+      <p class="muted" style="font-size:12.5px;font-weight:600;margin-top:14px">
+        Every release is written to an immutable audit ledger mapped to Companies Act 2013, Schedule VII reporting heads.
+      </p>
+    `;
+  }
+
+  $("#modal").innerHTML = `
+    <div class="modal-head">
+      <button class="close" onclick="closeModal()">✕</button>
+      <div class="row" style="gap:8px">
+        <span class="pill ${s.cls}">${s.icon} ${c.sector}</span>
+        <span class="urg ${urgent}">URGENCY ${c.urgency}</span>
+        <span class="urg cool">#${c.id}</span>
+      </div>
+      <h2>${c.title}</h2>
+      <div style="font-size:13px;color:#c3c6ee;font-weight:600">
+        📍 ${c.district}, Jharkhand &nbsp;·&nbsp; 👥 ${c.teams} team${c.teams===1?"":"s"} bidding
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="mtabs">
+        <button class="mtab ${modalTab==="blueprint"?"active":""}" onclick="setTab('blueprint',${c.id})">Blueprint</button>
+        <button class="mtab ${modalTab==="milestones"?"active":""}" onclick="setTab('milestones',${c.id})">Milestones</button>
+        <button class="mtab ${modalTab==="ledger"?"active":""}" onclick="setTab('ledger',${c.id})">CSR Ledger</button>
+      </div>
+      ${body}
+    </div>
+  `;
+}
+function setTab(t,id){ modalTab = t; renderModal(CHALLENGES.find(x=>x.id===id)); }
+
+/* ============================================================
+   UNIVERSITY HUB
+   ============================================================ */
+function renderUniversity(){
+  $("#my-claims").innerHTML = MY_CLAIMS.map(c=>`
+    <div style="padding:16px;border:1px solid var(--line);border-radius:12px;margin-bottom:12px">
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div style="flex:1;min-width:200px">
+          <div style="font-weight:800;font-size:14.5px;letter-spacing:-.015em">${c.title}</div>
+          <div class="muted" style="font-size:12.5px;font-weight:600;margin-top:3px">📍 ${c.district}, JH · ${c.stage}</div>
+        </div>
+        <span class="pill edu">${c.credits} credits</span>
+      </div>
+      <div class="bar" style="margin-top:12px"><i style="width:${c.progress}%"></i></div>
+      <div class="row" style="justify-content:space-between;margin-top:7px">
+        <span class="muted" style="font-size:11.5px;font-weight:700">MILESTONE PROGRESS</span>
+        <span style="font-size:11.5px;font-weight:800;color:var(--primary)">${c.progress}%</span>
+      </div>
+    </div>`).join("");
+
+  const claimable = CHALLENGES.filter(c=>c.teams<2).slice(0,4);
+  $("#claimable").innerHTML = claimable.map(c=>`
+    <div class="row" style="justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line);gap:10px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</div>
+        <div class="muted" style="font-size:11.5px;font-weight:600">📍 ${c.district} · Urgency ${c.urgency}</div>
+      </div>
+      <button class="btn ghost sm" onclick="openChallenge(${c.id})">Claim</button>
+    </div>`).join("");
+}
+
+/* ============================================================
+   CSR BOARD
+   ============================================================ */
+function renderCSR(){
+  $("#csr-body").innerHTML = CSR_PARTNERS.map(p=>`
+    <tr>
+      <td style="font-weight:800">${p.name}</td>
+      <td>${inr(p.pledged)}</td>
+      <td style="color:var(--green);font-weight:800">${inr(p.released)}</td>
+      <td><span class="badge ${p.cls}">${p.status}</span></td>
+    </tr>`).join("");
+
+  $("#sponsored").innerHTML = CHALLENGES.filter(c=>c.pledged>0).slice(0,5).map(c=>`
+    <div class="row" style="justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);gap:10px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.title}</div>
+        <div class="muted" style="font-size:11.5px;font-weight:600">📍 ${c.district} · ${c.teams} teams bidding</div>
+      </div>
+      <span class="pill agri">${inr(c.pledged)}</span>
+    </div>`).join("");
+}
+
+/* ============================================================
+   STATE DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  const max = Math.max(...DISTRICTS.map(d=>d[1]));
+  $("#heat").innerHTML = DISTRICTS.map(([name,n])=>{
+    const t = n/max;
+    const lvl = n>=15?5 : n>=10?4 : n>=7?3 : n>=4?2 : n>=1?1 : 0;
+    return `<div class="tile l${lvl}" title="${name}: ${n} open challenges">
+      <b>${n}</b><span>${name}</span></div>`;
+  }).join("");
+
+  const sectorCount = {};
+  CHALLENGES.forEach(c=> sectorCount[c.sector] = (sectorCount[c.sector]||0)+1);
+  const totalC = CHALLENGES.length;
+  const colors = { "Smart Education":"#4338ca", "Clean Water & Health":"#0ea5e9", "Agri-Tech & Livelihood":"#10b981" };
+  const scaled = { "Smart Education":58, "Clean Water & Health":47, "Agri-Tech & Livelihood":43 };
+  $("#sector-bars").innerHTML = Object.entries(scaled).map(([k,v])=>`
+    <div class="sbar">
+      <div class="t"><span>${SECTORS[k].icon} ${k}</span><span>${v}</span></div>
+      <div class="bar"><i style="width:${v/58*100}%;background:${colors[k]}"></i></div>
+    </div>`).join("");
+
+  const funnel = [
+    ["Challenges intaked", 148, "#94a3b8"],
+    ["AI verified", 126, "#6366f1"],
+    ["Claimed by universities", 83, "#4338ca"],
+    ["Prototype built", 34, "#7c3aed"],
+    ["Field piloted", 18, "#0ea5e9"],
+    ["Resolved at scale", 7, "#10b981"]
+  ];
+  $("#funnel").innerHTML = funnel.map(([label,n])=>`
+    <div class="sbar">
+      <div class="t"><span style="font-weight:700">${label}</span><span style="font-weight:900">${n}</span></div>
+      <div class="bar green"><i style="width:${n/148*100}%;background:${arguments[0]}"></i></div>
+    </div>`).join("").replace(/background:undefined/g,"");
+
+  /* rebuild funnel properly with per-row colors */
+  $("#funnel").innerHTML = funnel.map(([label,n,col])=>`
+    <div class="sbar">
+      <div class="t"><span style="font-weight:700">${label}</span><span style="font-weight:900">${n}</span></div>
+      <div class="bar"><i style="width:${n/148*100}%;background:${col}"></i></div>
+    </div>`).join("");
+
+  $("#feed").innerHTML = FEED.map(([ic,txt,meta])=>`
+    <div class="feed">
+      <div class="ic">${ic}</div>
+      <div><div style="font-weight:700">${txt}</div><div class="tm">${meta}</div></div>
+    </div>`).join("");
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+initFilters();
+renderHome();
+renderChallenges();
+</script>
+</body>
+</html>
