@@ -1,0 +1,2 @@
+# ProjectSetu is a static HTML/CSS/JavaScript prototype.
+# No external Python dependencies are required.
